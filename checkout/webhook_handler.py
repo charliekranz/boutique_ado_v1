@@ -31,11 +31,11 @@ class StripeWH_Handler:
         save_info = intent.metadata.save_info
 
         billing_details = intent.charges.data[0].billing_details
-        shipping_details = intent.shipping_details
-        grand_total = round(intent.data.charges[0].amount / 100, 2)
+        shipping_details = intent.shipping
+        grand_total = round(intent.charges.data[0].amount / 100, 2)
 
         # Clean data in the shipping details
-        for field, value in shipping_details.address.itmes():
+        for field, value in shipping_details.address.items():
             if value == "":
                 shipping_details.address[field] = None
 
@@ -53,7 +53,6 @@ class StripeWH_Handler:
                 profile.default_street_address2 = shipping_details.address.line2
                 profile.default_county = shipping_details.address.state
                 profile.save()
-
 
         order_exists = False
         attempt = 1
